@@ -6,6 +6,12 @@ import sublime_plugin
 import os
 import io
 
+# import sys
+# import importlib
+# from importlib import reload
+# imp.reload(sys)
+# sys.setdefaultencoding('utf-8')
+
 gEmpty = 0
 curFile = ""
 gIndentSize = 4
@@ -76,6 +82,10 @@ def blockInfoGet(lines):
 
 def wrapLinesStatus(lines):
     warpLineStatus = ""
+    firstLine = lines[0]
+    if firstLine[0] == "#" and firstLine[-1] == "\\":
+        return warpLineStatus
+
     lblock, rblock, lbracket,rbracket = blockInfoGet(lines)
     if lblock > rblock:
         warpLineStatus = "blockStart"
@@ -210,7 +220,7 @@ def lineMark(line):
         return 
 
     # For comment lines
-    if line[0] == "#":
+    if line[0] == "#" and line[-1] != "\\": 
         cur.comment = 1
         return
 
@@ -225,7 +235,7 @@ def lineMark(line):
         return
 
     # For reformating the "configure -"
-    if "configure -" in line:
+    if "configure -" in line and line.count("{") < line.count("}"): 
         cur.structCfg = 1
         return
 
@@ -346,7 +356,7 @@ def tclfmtRun():
 
     with io.StringIO() as output:
         # Open current file for reading
-        with open(curFile, 'r') as rFid:
+        with open(curFile, mode="r", encoding="utf-8") as rFid:
             for line in rFid:
                 line = lineTrim(line)
                 lineMark(line)
@@ -355,7 +365,7 @@ def tclfmtRun():
                 cur = LineAttr()
 
         # Write the formatted lines back
-        with open(target, 'w') as wFid:
+        with open(target, mode='w', encoding="utf-8") as wFid:
             wFid.write(output.getvalue())
 
 
