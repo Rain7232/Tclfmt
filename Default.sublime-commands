@@ -1,0 +1,6 @@
+[
+  {
+    "caption": "Tclfmt: Format this file",
+    "command": "tclfmt"
+  }
+]
