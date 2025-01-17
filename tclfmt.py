@@ -6,12 +6,6 @@ import sublime_plugin
 import os
 import io
 
-# import sys
-# import importlib
-# from importlib import reload
-# imp.reload(sys)
-# sys.setdefaultencoding('utf-8')
-
 gEmpty = 0
 curFile = ""
 gIndentSize = 4
@@ -356,7 +350,7 @@ def tclfmtRun():
 
     with io.StringIO() as output:
         # Open current file for reading
-        with open(curFile, mode="r", encoding="utf-8") as rFid:
+        with io.open(curFile, mode="r", encoding="utf-8") as rFid:
             for line in rFid:
                 line = lineTrim(line)
                 lineMark(line)
@@ -365,7 +359,7 @@ def tclfmtRun():
                 cur = LineAttr()
 
         # Write the formatted lines back
-        with open(target, mode='w', encoding="utf-8") as wFid:
+        with io.open(target, mode='w', encoding="utf-8") as wFid:
             wFid.write(output.getvalue())
 
 
