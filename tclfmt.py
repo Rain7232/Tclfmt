@@ -118,7 +118,7 @@ def wrapLinesReformat():
     maxLenOther2 = 0
     for i, line in enumerate(gWrapLines):
         words = line.split()
-        if i == 0 or len(words) < 2:
+        if i == 0:
             # No change
             formattedLines.append(line)
         else:
@@ -131,13 +131,16 @@ def wrapLinesReformat():
                 surPadding = paddingGen(maxLenOther - len(line))
                 newLine = line.replace("\\", surPadding+"\\")
                 newLine = "%s%s" % (padding, newLine)
-
+            elif len(words) == 1:
+                newLine = "%s%s" % (padding, line)
             else:
                 pad0 = paddingGen(maxLen0-len(words[0]))
                 pad1 = paddingGen(maxLen1-len(words[1]))
-                rest = " ".join(words[2:])
-                newLine = "%s%s %s%s%s %s" % (padding, words[0], pad0, words[1], pad1, rest)
-            
+                newLine = "%s%s %s%s%s" % (padding, words[0], pad0, words[1], pad1)
+                if len(words) > 2:
+                    rest = " ".join(words[2:])
+                    newLine = "%s %s" % (newLine, rest)
+
             formattedLines.append(newLine)
             if maxLenOther2 < len(newLine):
                 maxLenOther2 = len(newLine)
