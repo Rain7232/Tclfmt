@@ -126,15 +126,17 @@ def wrapLinesReformat():
             pad0 = 0
             pad1 = 0
             padding = paddingGen(gIndentSize)
-            if maxWordsLen > 3 or "expr " in line:
-                # It's hard to align these lines, so skip formatting
-                surPadding = paddingGen(maxLenOther - len(line))
-                newLine = line.replace("\\", surPadding+"\\")
-                newLine = "%s%s" % (padding, newLine)
+            if len(words) == 0:
+                continue
             elif len(words) == 1:
                 if len(line) == 1 and line[0] == "]":
                     padding = ""
                 newLine = "%s%s" % (padding, line)
+            elif maxWordsLen > 3 or "expr " in line:
+                # It's hard to align these lines, so skip formatting
+                surPadding = paddingGen(maxLenOther - len(line))
+                newLine = line.replace("\\", surPadding+"\\")
+                newLine = "%s%s" % (padding, newLine)
             else:
                 pad0 = paddingGen(maxLen0-len(words[0]))
                 pad1 = paddingGen(maxLen1-len(words[1]))
@@ -234,7 +236,6 @@ def lineMark(line):
 
     # For reformating the "configure -"
     if len(words) >= 3 and words[0][0] == "$" and words[1] == "configure" and words[2][0] == "-":
-        print(line)
         cur.structCfg = 1
         return
 
