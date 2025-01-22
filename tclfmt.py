@@ -233,7 +233,8 @@ def lineMark(line):
         return
 
     # For reformating the "configure -"
-    if "configure -" in line and line.count("{") < line.count("}"): 
+    if len(words) >= 3 and words[0][0] == "$" and words[1] == "configure" and words[2][0] == "-":
+        print(line)
         cur.structCfg = 1
         return
 
