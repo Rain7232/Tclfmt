@@ -132,7 +132,8 @@ def wrapLinesReformat():
                 if len(line) == 1 and line[0] == "]":
                     padding = ""
                 newLine = "%s%s" % (padding, line)
-            elif maxWordsLen > 3 or "expr " in line:
+            # elif maxWordsLen > 3 or "expr " in line:
+            elif len(words) > 3 or "expr " in line:
                 # It's hard to align these lines, so skip formatting
                 surPadding = paddingGen(maxLenOther - len(line))
                 newLine = line.replace("\\", surPadding+"\\")
@@ -174,6 +175,7 @@ def linesReformat(storeLines, index):
         prefix = " ".join(words[:index+1])
         surfix = " ".join(words[index+1:])
         newLine = "%s%s %s" % (prefix, padding, surfix)
+        newLine = newLine.rstrip()
         formattedLines.append(newLine)
 
     return formattedLines
@@ -365,7 +367,7 @@ def tclfmtRun():
                 cur = LineAttr()
 
         # Write the formatted lines back
-        with io.open(target, mode='w', encoding="utf-8") as wFid:
+        with io.open(target, mode='w', encoding="utf-8", newline='') as wFid:
             wFid.write(output.getvalue())
 
 
@@ -396,3 +398,4 @@ class TclfmtListener(sublime_plugin.EventListener):
     def on_activated(self, view):
         global curFile
         curFile = view.file_name()
+        
